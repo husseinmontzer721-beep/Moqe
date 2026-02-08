@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hussein Digital | بابل</title>
+    <title>Hussein Digital | حسين منتظر - مراجعات تقنية</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --p: #9d4edd;
             --p-bright: #c8b6ff;
-            --b: #000000;
-            --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "IBM Plex Sans Arabic", sans-serif;
+            --p-glow: rgba(157, 78, 221, 0.4);
+            --accent: #00f2ff;
+            --bg: #050208;
+            --card-bg: rgba(15, 10, 25, 0.7);
+            --font: "Cairo", sans-serif;
         }
 
         /* الإعدادات العامة */
@@ -23,13 +26,9 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-        
-        ::-webkit-scrollbar {
-            width: 0px;
-        }
 
         body {
-            background-color: var(--b);
+            background-color: var(--bg);
             color: #fff;
             font-family: var(--font);
             min-height: 100vh;
@@ -40,11 +39,29 @@
             background: radial-gradient(circle at center, #11081a 0%, #000 100%);
         }
 
-        /* محرك الخلفية (الجسيمات) */
+        /* خلفية الشبكة الهندسية المتحركة */
+        .geo-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(157, 78, 221, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(157, 78, 221, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 1;
+            mask-image: radial-gradient(circle, black, transparent 90%);
+            animation: gridMove 15s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to { background-position: 40px 40px; }
+        }
+
+        /* جزيئات مضيئة في الخلفية */
         #particle-canvas {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
+            z-index: 2;
             pointer-events: none;
         }
 
@@ -53,119 +70,278 @@
             position: relative;
             z-index: 10;
             width: 95%;
-            max-width: 1000px;
+            max-width: 1150px;
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 30px;
-            padding: 40px 20px;
-            perspective: 2000px;
-            animation: fadeInPage 1.5s ease-out;
+            grid-template-columns: 1fr 1.7fr;
+            gap: 25px;
+            padding: 30px 15px;
+            animation: slideUp 1s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @media (max-width: 850px) {
-            .master-wrapper { 
-                grid-template-columns: 1fr; 
-                display: block;
-                padding-top: 20px;
-            }
-            .card-left, .card-right { margin-bottom: 25px; }
+        @media (max-width: 950px) {
+            .master-wrapper { grid-template-columns: 1fr; display: flex; flex-direction: column; }
         }
 
-        /* كارت البروفايل (الجهة اليسرى) */
+        /* كارت البروفايل (اليسار) */
         .card-left {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(157, 78, 221, 0.2);
-            border-radius: 50px;
-            padding: 60px 30px;
+            border-radius: 45px;
+            padding: 50px 30px;
             text-align: center;
-            position: relative;
-            transition: transform 0.1s ease-out;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
         }
 
-        /* نظام الحلقات المتعددة (Orbit System) */
-        .avatar-engine {
+        .card-left:hover { border-color: var(--p); }
+
+        /* الأنيميشن المورفي للصورة */
+        .avatar-box {
             position: relative;
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 190px;
+            height: 190px;
+            margin: 0 auto 30px;
         }
 
-        .avatar-engine img {
+        .avatar-box img {
             width: 100%;
             height: 100%;
-            border-radius: 45px;
             object-fit: cover;
-            border: 2px solid var(--p);
-            z-index: 10;
-            position: relative;
+            border: 4px solid var(--p);
+            animation: morphShape 10s ease-in-out infinite;
+            box-shadow: 0 0 30px var(--p-glow);
             background: #000;
-            box-shadow: 0 0 30px rgba(157, 78, 221, 0.2);
         }
 
-        .ring {
-            position: absolute;
-            border: 2px solid transparent;
-            border-radius: 55px;
-            pointer-events: none;
+        @keyframes morphShape {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
         }
 
-        /* تفاصيل الحلقات المتناغمة */
-        .r1 { width: 210px; height: 210px; border-top: 3px solid var(--p); animation: orbit 6s linear infinite; opacity: 0.8; }
-        .r2 { width: 235px; height: 235px; border-right: 2px solid var(--p-bright); animation: orbit 10s linear infinite reverse; opacity: 0.5; }
-        .r3 { width: 260px; height: 260px; border-bottom: 1.5px solid var(--p); animation: orbit 15s linear infinite; opacity: 0.3; }
-        .r4 { width: 195px; height: 195px; border-left: 4px solid var(--p); animation: pulseOrbit 4s ease-in-out infinite alternate; opacity: 0.6; }
+        h1 { font-size: 2.3rem; font-weight: 900; margin-bottom: 5px; background: linear-gradient(to left, #fff, var(--p-bright)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        @keyframes orbit {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+        .handle { color: var(--p-bright); font-weight: 600; letter-spacing: 1px; margin-bottom: 20px; font-size: 0.9rem; }
 
-        @keyframes pulseOrbit {
-            0% { transform: rotate(0deg) scale(1); }
-            100% { transform: rotate(45deg) scale(1.1); }
-        }
+        .location-tag { font-size: 13px; opacity: 0.6; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        /* كارت المعلومات (الجهة اليمنى) */
+        /* كارت المحتوى (اليمين) */
         .card-right {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
             border: 1px solid rgba(157, 78, 221, 0.2);
-            border-radius: 50px;
-            padding: 50px;
+            border-radius: 45px;
+            padding: 45px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        .babil-tag {
-            display: inline-block;
-            background: linear-gradient(90deg, var(--p), #5856d6);
-            padding: 6px 20px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-            width: fit-content;
-            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
         }
 
-        h1 { font-size: 2.5rem; font-weight: 600; margin-bottom: 10px; }
-        
-        .description {
+        .bio-text {
+            line-height: 1.9;
             font-size: 15px;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 35px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 30px;
+            border-right: 3px solid var(--p);
+            padding-right: 20px;
         }
 
-        /* شبكة الروابط التفاعلية */
+        /* شبكة الأزرار - مطورة لدعم جميع الشاشات */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.6s;
+        }
+
+        .btn:hover::after { left: 100%; }
+
+        .btn:hover {
+            background: var(--p);
+            transform: translateY(-8px) scale(1.02);
+            border-color: #fff;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn i { font-size: 26px; margin-left: 15px; color: var(--p-bright); }
+        .btn span { font-weight: 700; font-size: 17px; }
+
+        /* فوتر صغير */
+        .footer-info {
+            margin-top: 35px;
+            text-align: center;
+            font-size: 10px;
+            opacity: 0.4;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* أنيميشن الدخول */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* تحسينات الموبايل */
+        @media (max-width: 500px) {
+            .card-right { padding: 30px 20px; }
+            h1 { font-size: 1.8rem; }
+            .btn { padding: 18px; }
+            .btn span { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="geo-grid"></div>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="master-wrapper">
+        
+        <div class="card-left">
+            <div class="avatar-box">
+                <img src="h.jpg" alt="حسين منتظر">
+            </div>
+            <h1>حسين منتظر</h1>
+            <div class="handle">@HUSSEIN.DIGITAL</div>
+            
+            <div style="background: rgba(0, 242, 255, 0.1); border: 1px solid var(--accent); padding: 8px 15px; border-radius: 15px; font-size: 12px; color: var(--accent); display: inline-block; margin-bottom: 20px;">
+                <i class="fas fa-bolt"></i> صانع محتوى تقني
+            </div>
+
+            <div class="location-tag">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>بابل، العراق 🦁</span>
+            </div>
+        </div>
+
+        <div class="card-right">
+            
+            <div class="section-title">
+                <i class="fas fa-laptop-code"></i>
+                <span>عن القناة والمحتوى</span>
+            </div>
+            <div class="bio-text">
+                أقدم لكم شرحاً مفصلاً ومراجعات شاملة لأحدث <b>الأجهزة الذكية والتقنيات</b> المتطورة. متخصص في لغة بايثون وتطوير الحلول البرمجية، وأسعى دائماً لتقديم محتوى يجمع بين الدقة الهندسية وسهولة الفهم.
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-share-nodes"></i>
+                <span>منصات التواصل الاجتماعي</span>
+            </div>
+
+            <div class="links-grid">
+                <a href="https://instagram.com/Hussein.digital" class="btn" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://t.me/I_QQ_Q" class="btn" target="_blank">
+                    <i class="fab fa-telegram-plane"></i>
+                    <span>Telegram</span>
+                </a>
+                <a href="https://www.tiktok.com/@hussein.digital" class="btn" target="_blank">
+                    <i class="fab fa-tiktok"></i>
+                    <span>TikTok</span>
+                </a>
+                <a href="https://www.facebook.com/share/188MWUHJFG/" class="btn" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                    <span>Facebook</span>
+                </a>
+            </div>
+
+            <div class="footer-info">
+                Designed & Coded by Hussein • 2026 • Babylon
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // محرك الجزيئات الخلفي (خفيف للأداء)
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.init();
+            }
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speedX = Math.random() * 0.3 - 0.15;
+                this.speedY = Math.random() * 0.3 - 0.15;
+                this.alpha = Math.random() * 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.init();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(157, 78, 221, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
         .links-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
