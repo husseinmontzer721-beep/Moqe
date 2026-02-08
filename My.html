@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hussein Digital | حسين منتظر - مراجعات تقنية</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --p: #9d4edd;
+            --p-bright: #c8b6ff;
+            --p-glow: rgba(157, 78, 221, 0.4);
+            --accent: #00f2ff;
+            --bg: #050208;
+            --card-bg: rgba(15, 10, 25, 0.8);
+            --font: "Cairo", sans-serif;
+        }
+
+        /* تصفير الإعدادات الافتراضية */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: var(--font);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background: radial-gradient(circle at center, #11081a 0%, #000 100%);
+            padding: 20px;
+        }
+
+        /* خلفية الشبكة الهندسية المتحركة */
+        .geo-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(157, 78, 221, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(157, 78, 221, 0.05) 1px, transparent 1px);
+            background-size: 45px 45px;
+            z-index: 1;
+            mask-image: radial-gradient(circle, black, transparent 90%);
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to { background-position: 45px 45px; }
+        }
+
+        /* محرك الجزيئات في الخلفية */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* الحاوية الرئيسية المرنة */
+        .master-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1150px;
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            gap: 25px;
+            animation: fadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @media (max-width: 950px) {
+            .master-wrapper { grid-template-columns: 1fr; }
+        }
+
+        /* تصميم الكروت (Glassmorphism) */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            border-radius: 40px;
+            padding: 45px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover { border-color: var(--p); }
+
+        .card-left { text-align: center; }
+
+        /* الأنيميشن الهندسي المتغير (Morphing) لصورة البروفايل */
+        .avatar-engine {
+            position: relative;
+            width: 190px;
+            height: 190px;
+            margin: 0 auto 30px;
+        }
+
+        .avatar-engine img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 4px solid var(--p);
+            animation: morphing 10s ease-in-out infinite;
+            box-shadow: 0 0 30px var(--p-glow);
+            background: #000;
+        }
+
+        @keyframes morphing {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 5px; background: linear-gradient(to left, #fff, var(--p-bright)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .handle { color: var(--p-bright); font-weight: 600; letter-spacing: 1px; margin-bottom: 15px; font-size: 1rem; }
+
+        /* تاق التخصص */
+        .tech-badge {
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 18px;
+            border-radius: 15px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* أقسام النصوص */
+        .bio-section { margin-bottom: 30px; }
+        .bio-section h3 { color: var(--p-bright); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
+        .bio-section p { font-size: 16px; line-height: 1.9; color: rgba(255, 255, 255, 0.85); border-right: 4px solid var(--p); padding-right: 20px; }
+
+        /* شبكة الأزرار المطورة والداعمة لجميع الشاشات */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 22px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* تأثير لمعة عند التمرير */
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.6s;
+        }
+
+        .btn:hover::after { left: 100%; }
+
+        .btn:hover {
+            background: var(--p);
+            transform: translateY(-8px) scale(1.02);
+            border-color: #fff;
+            box-shadow: 0 15px 30px rgba(157, 78, 221, 0.4);
+        }
+
+        .btn i { font-size: 28px; margin-left: 15px; color: var(--p-bright); transition: 0.3s; }
+        .btn:hover i { color: #fff; transform: scale(1.1); }
+        .btn span { font-weight: 800; font-size: 18px; white-space: nowrap; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        footer { text-align: center; margin-top: 40px; font-size: 11px; opacity: 0.4; letter-spacing: 2px; }
+
+        /* تحسينات الشاشات الصغيرة جداً */
+        @media (max-width: 500px) {
+            .card { padding: 30px 20px; }
+            h1 { font-size: 2rem; }
+            .btn { padding: 18px; }
+            .btn span { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="geo-grid"></div>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="master-wrapper">
+        
+        <div class="card card-left">
+            <div class="avatar-engine">
+                <img src="h.jpg" alt="حسين منتظر">
+            </div>
+            <h1>حسين منتظر</h1>
+            <div class="handle">@HUSSEIN.DIGITAL</div>
+            
+            <div class="tech-badge">
+                <i class="fas fa-microchip"></i>
+                <span>مراجعة وتقييم الأجهزة الذكية</span>
+            </div>
+
+            <p style="font-size: 14px; opacity: 0.6; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-map-marker-alt" style="color: var(--p);"></i>
+                بابل، العراق 🦁
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="bio-section">
+                <h3><i class="fas fa-video"></i> مراجعات الأجهزة والتقنية</h3>
+                <p>
+                    أهلاً بك في مساحتي الرقمية! أنا حسين، صانع محتوى تقني أركز على تقديم <b>مراجعات دقيقة لأحدث الهواتف والأجهزة الذكية</b>، مع تبسيط المفاهيم التقنية المعقدة لتصل للجميع بوضوح واحترافية.
+                </p>
+            </div>
+
+            <div class="bio-section">
+                <h3><i class="fas fa-code"></i> البرمجة والأتمتة</h3>
+                <p>
+                    إلى جانب شغفي بالأجهزة، أعمل كمطور لبوتات لغة بايثون، حيث أقوم ببرمجة أدوات ذكية تسهل العمليات الرقمية وتجعل التكنولوجيا أكثر فاعلية.
+                </p>
+            </div>
+
+            <div class="links-grid">
+                <a href="https://instagram.com/Hussein.digital" class="btn" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://t.me/I_QQ_Q" class="btn" target="_blank">
+                    <i class="fab fa-telegram-plane"></i>
+                    <span>Telegram</span>
+                </a>
+                <a href="https://www.tiktok.com/@hussein.digital" class="btn" target="_blank">
+                    <i class="fab fa-tiktok"></i>
+                    <span>TikTok</span>
+                </a>
+                <a href="https://www.facebook.com/share/188MWUHJFG/" class="btn" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                    <span>Facebook</span>
+                </a>
+            </div>
+
+            <footer>DESIGNED & CODED BY HUSSEIN • 2026 • BABYLON</footer>
+        </div>
+    </div>
+
+    <script>
+        // محرك الجزيئات الخلفي الخفيف
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.init();
+            }
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+                this.alpha = Math.random() * 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.init();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(157, 78, 221, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
